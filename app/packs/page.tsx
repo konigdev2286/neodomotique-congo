@@ -25,8 +25,13 @@ export default function PacksPage() {
   const lignesComparatif = [
     {
       critere: "Assistant vocal intelligent",
-      starter: "1× Echo Pop (Alexa)",
-      confort: "1× Echo Dot (Alexa, son supérieur)",
+      starter: "1× Echo Pop (Alexa, format compact hémisphérique)",
+      confort: "1× Echo Dot (Alexa, son supérieur, capteur de température, détecteur de présence & commandes tactiles)",
+    },
+    {
+      critere: "Usage recommandé",
+      starter: "Studio compact ou chambre",
+      confort: "Studio complet ou démarrage idéal pour un salon intelligent",
     },
     {
       critere: "Éclairage connecté",
@@ -47,8 +52,8 @@ export default function PacksPage() {
     },
     {
       critere: "Installation & Configuration",
-      starter: "Incluse à Brazzaville et Pointe-Noire",
-      confort: "Incluse à Brazzaville et Pointe-Noire",
+      starter: "Incluse à Brazzaville & Pointe-Noire (national sur devis)",
+      confort: "Incluse à Brazzaville & Pointe-Noire (national sur devis)",
     },
     {
       critere: "Période d'assistance",
@@ -162,9 +167,14 @@ export default function PacksPage() {
                 />
               </div>
 
-              <span className="font-titre text-xs uppercase tracking-logo text-or">
-                Confort & Contrôle maximal
-              </span>
+              <div className="flex items-center gap-2 flex-wrap">
+                <span className="font-titre text-xs uppercase tracking-logo text-or">
+                  Confort & Contrôle maximal
+                </span>
+                <span className="font-titre text-[10px] uppercase tracking-wide px-2 py-0.5 border border-or/60 text-or bg-noir-950">
+                  Idéal Studio ou Salon Intelligent
+                </span>
+              </div>
               <h2 className="font-titre text-2xl sm:text-3xl uppercase tracking-accroche text-ivoire mt-1">
                 {packConfort.nom}
               </h2>
@@ -365,10 +375,102 @@ export default function PacksPage() {
           </div>
         </section>
 
-        {/* 3. Bandeau WhatsApp final */}
+        {/* 3. Comparatif détaillé des assistants vocaux Echo Pop vs Echo Dot */}
+        <section className="mb-20 border border-noir-700 bg-noir-900 p-6 sm:p-10">
+          <div className="max-w-3xl mb-8">
+            <span className="font-titre text-xs uppercase tracking-logo text-or block mb-1">
+              Comprendre les assistants vocaux
+            </span>
+            <h2 className="font-titre text-xl sm:text-3xl uppercase tracking-accroche text-ivoire">
+              Echo Pop vs Echo Dot : Quelles différences ?
+            </h2>
+            <p className="font-texte text-sm text-ivoire-700 mt-2 leading-relaxed">
+              Les deux enceintes intègrent l&apos;intelligence vocale Amazon Alexa en français pour piloter vos luminaires, climatiseurs et prises au son de votre voix. Voici les spécificités de chaque modèle :
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {/* Colonne Echo Pop */}
+            <div className="border border-noir-800 bg-noir-950 p-6 flex flex-col justify-between">
+              <div>
+                <div className="flex items-center justify-between pb-4 border-b border-noir-800">
+                  <h3 className="font-titre text-lg uppercase tracking-wide text-ivoire">
+                    Echo Pop
+                  </h3>
+                  <span className="font-titre text-[10px] uppercase tracking-wide px-2 py-0.5 border border-noir-700 text-ivoire-700">
+                    Pack Starter
+                  </span>
+                </div>
+                <p className="font-texte text-xs text-ivoire-700 mt-3 leading-relaxed">
+                  Enceinte connectée compacte au format demi-sphère. Idéale pour les chambres, bureaux ou tables de chevet.
+                </p>
+                <ul className="mt-4 space-y-2 font-texte text-xs text-ivoire-700">
+                  <li className="flex items-start gap-2">
+                    <span className="text-or">✓</span>
+                    <span>Contrôle vocal Alexa complet (musique, luminaires, météo, minuteurs)</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-or">✓</span>
+                    <span>Format compact et discret avec haut-parleur frontal</span>
+                  </li>
+                  <li className="flex items-start gap-2 text-ivoire-800">
+                    <span className="text-ivoire-800">—</span>
+                    <span>Son adapté aux petites pièces</span>
+                  </li>
+                </ul>
+              </div>
+              <div className="mt-6 pt-4 border-t border-noir-800 text-[11px] font-texte text-ivoire-800 italic">
+                * Note : Modèle inclus dans le Pack Starter. En achat unitaire, tarif à confirmer (Amazon ne produit plus ce modèle).
+              </div>
+            </div>
+
+            {/* Colonne Echo Dot */}
+            <div className="border border-or/60 bg-noir-950 p-6 flex flex-col justify-between relative">
+              <div className="absolute -top-3 right-6 border border-or bg-noir px-2 py-0.5 font-titre text-[10px] uppercase tracking-wide text-or">
+                Plus Complet & Évolué
+              </div>
+              <div>
+                <div className="flex items-center justify-between pb-4 border-b border-noir-800">
+                  <h3 className="font-titre text-lg uppercase tracking-wide text-ivoire">
+                    Echo Dot (5ᵉ gén.)
+                  </h3>
+                  <span className="font-titre text-[10px] uppercase tracking-wide px-2 py-0.5 border border-or/40 text-or">
+                    Pack Confort
+                  </span>
+                </div>
+                <p className="font-texte text-xs text-ivoire-700 mt-3 leading-relaxed">
+                  L&apos;enceinte sphérique de référence avec acoustique supérieure et capteurs domotiques avancés intégrés.
+                </p>
+                <ul className="mt-4 space-y-2.5 font-texte text-xs text-ivoire-700">
+                  <li className="flex items-start gap-2">
+                    <span className="text-or">★</span>
+                    <span><strong className="text-ivoire font-medium">Son supérieur :</strong> Haut-parleur plus puissant avec basses profondes pour une immersion sonore de qualité.</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-or">★</span>
+                    <span><strong className="text-ivoire font-medium">Capteur de température :</strong> Mesure la température de la pièce pour déclencher automatiquement clim ou ventilateur.</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-or">★</span>
+                    <span><strong className="text-ivoire font-medium">Détecteur de présence :</strong> Détecte les mouvements pour automatiser l&apos;allumage ou l&apos;extinction des lumières.</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-or">★</span>
+                    <span><strong className="text-ivoire font-medium">Commandes tactiles :</strong> Tapez sur le dessus pour couper le réveil ou mettre en pause la lecture audio.</span>
+                  </li>
+                </ul>
+              </div>
+              <div className="mt-6 pt-4 border-t border-noir-800 text-[11px] font-texte text-or">
+                Inclus d&apos;office dans le Pack Confort (valeur au détail : 85 000 FCFA).
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* 4. Bandeau WhatsApp final */}
         <WhatsAppBanner
           titre="Besoin d'une configuration personnalisée hors pack ?"
-          sousTitre="Nous étudions gratuitement votre plan pour équiper 3 pièces, une maison ou un duplex complet."
+          sousTitre="Nous étudions gratuitement votre plan pour équiper un salon, une villa ou un duplex complet. Interventions à Brazzaville, Pointe-Noire et au niveau national selon le projet."
           messagePredefini="Bonjour, je souhaite un devis personnalisé pour équiper plusieurs pièces."
         />
       </div>

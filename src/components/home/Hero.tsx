@@ -22,7 +22,7 @@ export function Hero() {
 
       <div className="max-w-4xl mx-auto relative z-10 flex flex-col items-center">
         {/* Titre principal */}
-        <h1 className="font-titre text-3xl sm:text-5xl lg:text-6xl uppercase tracking-logo text-ivoire font-light leading-tight sm:leading-tight">
+        <h1 className="font-titre text-2xl sm:text-4xl lg:text-[42px] uppercase tracking-logo text-ivoire font-light leading-tight max-w-3xl">
           Offrez à votre maison le confort du futur
         </h1>
 

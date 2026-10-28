@@ -19,7 +19,7 @@ export const packs: Pack[] = [
     id: "studio-confort",
     nom: "Pack Studio Confort",
     prix: 150000,
-    description: "La solution idéale pour transformer votre studio en un espace moderne, connecté et confortable.",
+    description: "La solution idéale pour équiper votre studio ou servir de point de départ parfait pour un salon intelligent moderne et connecté.",
     image: "/images/packs/pack-studio-confort.jpg",
     contenu: [
       { quantite: 1, nom: "Echo Dot", detail: "Contrôle vocal avec Alexa" },

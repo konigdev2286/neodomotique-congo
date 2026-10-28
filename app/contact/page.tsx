@@ -198,6 +198,12 @@ export default function ContactPage() {
                     options={[
                       { value: "Brazzaville", label: "Brazzaville" },
                       { value: "Pointe-Noire", label: "Pointe-Noire" },
+                      { value: "Dolisie", label: "Dolisie" },
+                      { value: "Nkayi", label: "Nkayi" },
+                      { value: "Oyo", label: "Oyo" },
+                      { value: "Ouesso", label: "Ouesso" },
+                      { value: "Kinkala", label: "Kinkala" },
+                      { value: "Autre ville (Congo)", label: "Autre ville (Congo - Projet national)" },
                     ]}
                   />
 
@@ -241,7 +247,7 @@ export default function ContactPage() {
                 Zones d&apos;intervention
               </h3>
               <p className="font-texte text-sm text-ivoire-700 mt-2 leading-relaxed">
-                Nos équipes interviennent et installent le matériel directement chez vous dans les deux grandes agglomérations de la République du Congo :
+                Nos équipes interviennent et installent le matériel directement chez vous dans les deux grandes agglomérations et au niveau national selon le projet :
               </p>
               <div className="mt-6 space-y-3">
                 <div className="border border-noir-800 bg-noir-950 p-4">
@@ -260,6 +266,14 @@ export default function ContactPage() {
                     Intervention sur rendez-vous pour résidences et appartements (Centre, Tié-Tié, Lumumba...)
                   </span>
                 </div>
+                <div className="border border-or/40 bg-noir-950 p-4">
+                  <span className="font-titre text-sm uppercase tracking-wide text-or block">
+                    Couverture Nationale (Tout le Congo)
+                  </span>
+                  <span className="font-texte text-xs text-ivoire-700">
+                    Pour des configurations personnalisées, résidences ou villas complètes, nous intervenons sur toute l&apos;étendue du territoire national selon le projet (Dolisie, Nkayi, Oyo, Ouesso, etc.).
+                  </span>
+                </div>
               </div>
             </div>
 
@@ -276,14 +290,23 @@ export default function ContactPage() {
                 <strong className="block text-ivoire font-normal mt-1">{site.reseaux.nom}</strong>
               </p>
               <div className="mt-4 space-y-2">
-                {site.reseaux.plateformes.map((p) => (
-                  <div
-                    key={p}
-                    className="flex items-center justify-between py-2 border-b border-noir-800 text-xs font-texte"
+                {[
+                  { nom: "TikTok", url: site.liens.tiktok, handle: "@neodomo.cg" },
+                  { nom: "Instagram", url: site.liens.instagram, handle: "@neodomo.cg" },
+                  { nom: "Facebook", url: site.liens.facebook, handle: "NeoDomotique Congo" },
+                ].map((item) => (
+                  <a
+                    key={item.nom}
+                    href={item.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center justify-between py-2 border-b border-noir-800 text-xs font-texte hover:text-ivoire transition-colors group"
                   >
-                    <span className="text-ivoire font-medium">{p}</span>
-                    <span className="text-ivoire-800 italic">(Lien bientôt disponible)</span>
-                  </div>
+                    <span className="text-ivoire font-medium group-hover:text-or transition-colors">{item.nom}</span>
+                    <span className="text-or text-[11px] font-titre uppercase tracking-wide group-hover:underline">
+                      {item.handle} ↗
+                    </span>
+                  </a>
                 ))}
               </div>
             </div>

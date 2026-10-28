@@ -54,9 +54,16 @@ export function PackCard({ pack, miseEnAvant = false, lienDetail = true }: PackC
         </div>
 
         <div className="p-6">
-          <span className="font-titre text-[11px] uppercase tracking-logo text-or">
-            Formule clé en main
-          </span>
+          <div className="flex items-center gap-2 flex-wrap">
+            <span className="font-titre text-[11px] uppercase tracking-logo text-or">
+              Formule clé en main
+            </span>
+            {pack.id === "studio-confort" && (
+              <span className="font-titre text-[10px] uppercase tracking-wide px-2 py-0.5 border border-or/50 text-or bg-noir-950">
+                Idéal Studio ou Salon Intelligent
+              </span>
+            )}
+          </div>
           <h3 className="font-titre text-xl sm:text-2xl uppercase tracking-accroche text-ivoire mt-1">
             {pack.nom}
           </h3>

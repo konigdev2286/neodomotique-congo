@@ -5,11 +5,18 @@ export const site = {
   slogan: "L'intelligence au service de votre confort",
   sloganAlt: "Maison intelligente • Confort absolu",
   ville: "Brazzaville",
-  zones: ["Brazzaville", "Pointe-Noire"],
+  zones: ["Brazzaville", "Pointe-Noire", "National (selon projet)"],
   whatsapp: { affichage: "+242 06 613 00 09", e164: "242066130009" },
-  reseaux: { nom: "NeoDomotique Congo", plateformes: ["TikTok", "Instagram", "Facebook"] },
-  // TODO: URLs des pages à fournir par le client
-  liens: { tiktok: "", instagram: "", facebook: "" },
+  reseaux: {
+    nom: "neodomo.cg",
+    handle: "@neodomo.cg",
+    plateformes: ["TikTok", "Instagram", "Facebook"],
+  },
+  liens: {
+    tiktok: "https://www.tiktok.com/@neodomo.cg",
+    facebook: "https://www.facebook.com/share/1CFkVAM7sc/?mibextid=wwXIfr",
+    instagram: "https://www.instagram.com/neodomo.cg?obrf=a2k3cXVudmRueWZ5&utm_source=qr",
+  },
   assistanceJours: 30,
   garanties: [
     "Installation professionnelle incluse",

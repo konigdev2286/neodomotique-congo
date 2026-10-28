@@ -115,14 +115,27 @@ export function Footer() {
               Réseaux & Confiance
             </h3>
             <p className="font-texte text-xs text-ivoire-800">
-              Retrouvez nos vidéos et démos sous le nom :
+              Retrouvez nos démonstrations en vidéo :
               <strong className="block text-ivoire font-medium mt-0.5">{site.reseaux.nom}</strong>
             </p>
             <ul className="flex flex-col gap-1.5 font-texte text-xs text-ivoire-700">
-              {site.reseaux.plateformes.map((plateforme) => (
-                <li key={plateforme} className="flex items-center justify-between py-1 border-b border-noir-800">
-                  <span>{plateforme}</span>
-                  <span className="text-[11px] text-or font-titre uppercase tracking-wide">@{site.reseaux.nom.replace(/\s+/g, "").toLowerCase()}</span>
+              {[
+                { plateforme: "TikTok", url: site.liens.tiktok, handle: "@neodomo.cg" },
+                { plateforme: "Instagram", url: site.liens.instagram, handle: "@neodomo.cg" },
+                { plateforme: "Facebook", url: site.liens.facebook, handle: "NeoDomotique Congo" },
+              ].map(({ plateforme, url, handle }) => (
+                <li key={plateforme} className="border-b border-noir-800">
+                  <a
+                    href={url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center justify-between py-1.5 hover:text-ivoire transition-colors group"
+                  >
+                    <span className="group-hover:text-or transition-colors">{plateforme}</span>
+                    <span className="text-[11px] text-or font-titre uppercase tracking-wide group-hover:underline">
+                      {handle} ↗
+                    </span>
+                  </a>
                 </li>
               ))}
             </ul>
@@ -135,8 +148,8 @@ export function Footer() {
         {/* Ligne inférieure de mentions */}
         <div className="mt-12 pt-8 border-t border-noir-800 flex flex-col sm:flex-row items-center justify-between gap-4 font-texte text-xs text-ivoire-800">
           <p>© {new Date().getFullYear()} {site.nom}. Tous droits réservés.</p>
-          <div className="flex items-center gap-6">
-            <span>Brazzaville & Pointe-Noire (Congo)</span>
+          <div className="flex flex-wrap items-center gap-4 sm:gap-6">
+            <span>Brazzaville, Pointe-Noire & National selon projet (Congo)</span>
             <span className="text-noir-700">|</span>
             <Link href="/mentions-legales" className="hover:text-ivoire transition-colors">
               Mentions légales

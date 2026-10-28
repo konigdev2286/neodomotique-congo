@@ -16,7 +16,7 @@ const etapes = [
   {
     numero: "03",
     titre: "Nous installons, configurons et testons chez vous",
-    description: "Nos techniciens interviennent chez vous à Brazzaville ou Pointe-Noire : pose propre, connexion Wi-Fi et test de chaque appareil.",
+    description: "Nos techniciens interviennent chez vous à Brazzaville, Pointe-Noire ou au niveau national selon votre projet : pose propre, raccordement et test complet de chaque équipement.",
   },
   {
     numero: "04",

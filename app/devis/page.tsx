@@ -5,6 +5,9 @@ import Link from "next/link";
 import { site, lienWhatsApp } from "@/data/site";
 import {
   produits,
+  grilleInterrupteurs,
+  SwitchTech,
+  SwitchGang,
   mainOeuvre,
   acomptePourcentage,
   validiteDevisJours,
@@ -30,7 +33,13 @@ export default function DevisSimulatorPage() {
   const [typeLogement, setTypeLogement] = useState<TypeLogement>("appartement");
   const [nombrePieces, setNombrePieces] = useState<number>(2);
   const [pointsLumineux, setPointsLumineux] = useState<number>(2);
-  const [interrupteurs, setInterrupteurs] = useState<number>(1);
+  const [techInterrupteur, setTechInterrupteur] = useState<SwitchTech>("wifi");
+  const [interrupteursParGang, setInterrupteursParGang] = useState<Record<SwitchGang, number>>({
+    1: 0,
+    2: 1,
+    3: 0,
+    4: 0,
+  });
   const [controleTV, setControleTV] = useState<boolean>(true);
   const [controleClim, setControleClim] = useState<boolean>(true);
   const [controleVentilateur, setControleVentilateur] = useState<boolean>(false);
@@ -44,9 +53,14 @@ export default function DevisSimulatorPage() {
 
   const [erreurEtape, setErreurEtape] = useState<string | null>(null);
 
+  // Total d'interrupteurs sélectionnés
+  const totalInterrupteurs = useMemo(
+    () => Object.values(interrupteursParGang).reduce((a, b) => a + b, 0),
+    [interrupteursParGang]
+  );
+
   // Recherche des tarifs dans src/data/produits.ts
   const prixAmpoule = produits.find((p) => p.id === "ampoule")?.prix ?? 7000;
-  const prixInterrupteur = produits.find((p) => p.id === "interrupteur-2")?.prix ?? 15500;
   const prixTelecommande = produits.find((p) => p.id === "telecommande")?.prix ?? 12500;
   const prixPrise = produits.find((p) => p.id === "prise")?.prix ?? 7500;
   const produitEchoDot = produits.find((p) => p.id === "echo-dot");
@@ -75,15 +89,20 @@ export default function DevisSimulatorPage() {
       });
     }
 
-    // 2. Interrupteurs wifi 2 gang
-    if (interrupteurs > 0) {
-      lignes.push({
-        nom: "Interrupteur wifi 2 gang",
-        quantite: interrupteurs,
-        prixUnitaire: prixInterrupteur,
-        total: interrupteurs * prixInterrupteur,
-      });
-    }
+    // 2. Interrupteurs tactiles muraux
+    ([1, 2, 3, 4] as SwitchGang[]).forEach((gang) => {
+      const qte = interrupteursParGang[gang];
+      if (qte > 0) {
+        const itemGrille = grilleInterrupteurs.find((g) => g.gang === gang);
+        const pu = itemGrille ? itemGrille[techInterrupteur] : 15500;
+        lignes.push({
+          nom: `Interrupteur tactile ${techInterrupteur === "wifi" ? "WiFi" : "Zigbee"} ${gang} gang`,
+          quantite: qte,
+          prixUnitaire: pu,
+          total: qte * pu,
+        });
+      }
+    });
 
     // 3. Télécommande universelle IR
     if (besoinTelecommande) {
@@ -119,7 +138,7 @@ export default function DevisSimulatorPage() {
         quantite: 1,
         prixUnitaire: null,
         total: null,
-        note: "Prix à confirmer",
+        note: "Prix à confirmer (production Amazon arrêtée)",
       });
     }
 
@@ -159,12 +178,12 @@ export default function DevisSimulatorPage() {
     };
   }, [
     pointsLumineux,
-    interrupteurs,
+    interrupteursParGang,
+    techInterrupteur,
     besoinTelecommande,
     prisesSupplementaires,
     assistantVocal,
     prixAmpoule,
-    prixInterrupteur,
     prixTelecommande,
     prixPrise,
     produitEchoDot,
@@ -244,7 +263,7 @@ export default function DevisSimulatorPage() {
           id: `dev-${Date.now()}`,
           nom: nom || "Prospect Devis En Ligne",
           telephone: telephone || "Non renseigné",
-          ville: (ville as "Brazzaville" | "Pointe-Noire") || "Brazzaville",
+          ville: ville || "Brazzaville",
           quartier: quartier || "Non précisé",
           typeLogement: `${typeLogement} (${nombrePieces} p.)`,
           packInteret: calcul.packRecommande ? `Pack : ${calcul.packRecommande.nom}` : "Devis Simulateur",
@@ -431,32 +450,181 @@ export default function DevisSimulatorPage() {
                     Question 04
                   </span>
                   <h2 className="font-titre text-xl sm:text-2xl uppercase tracking-accroche text-ivoire">
-                    Combien d&apos;interrupteurs muraux à remplacer ?
+                    Combien d&apos;interrupteurs muraux et quelle technologie ?
                   </h2>
-                  <p className="font-texte text-sm text-ivoire-700">
-                    Interrupteur tactile Wi-Fi 2 gang ({formatFCFA(prixInterrupteur)} / unité). Permet de piloter 2 circuits de lumière murale existants.
-                  </p>
-                  <div className="flex items-center gap-4 pt-4">
-                    <button
-                      type="button"
-                      onClick={() => setInterrupteurs((prev) => Math.max(0, prev - 1))}
-                      className="h-12 w-12 border border-noir-700 bg-noir-800 font-titre text-xl text-ivoire hover:border-or transition-colors flex items-center justify-center"
-                    >
-                      —
-                    </button>
-                    <span className="font-titre text-3xl text-or w-16 text-center">
-                      {interrupteurs}
+
+                  {/* Bloc pédagogique officiel */}
+                  <div className="border border-or/40 bg-noir-950 p-4 sm:p-5 space-y-3">
+                    <h3 className="font-titre text-sm uppercase tracking-wide text-or">
+                      Quelle technologie pour vos interrupteurs ?
+                    </h3>
+                    <div className="space-y-2 text-xs font-texte text-ivoire-700 leading-relaxed">
+                      <p>
+                        <strong className="text-ivoire font-medium">📶 WiFi</strong> — Se connecte directement à votre box internet. Idéal pour 1 à 3 interrupteurs. Simple et rapide à installer.
+                      </p>
+                      <p>
+                        <strong className="text-ivoire font-medium">🔗 Zigbee</strong> — Passe par une passerelle dédiée, plus stable et plus rapide, sans surcharger votre WiFi. Recommandé à partir de 4 interrupteurs ou pour une maison complète, et plus facile à faire évoluer plus tard (ajout de capteurs, ampoules...).
+                      </p>
+                      <p className="text-ivoire-800 pt-1 border-t border-noir-800">
+                        <strong className="text-or font-medium">💡 Vous hésitez ?</strong> Le WiFi suffit pour une petite installation. Le Zigbee devient plus avantageux dès que votre maison compte plusieurs pièces connectées.
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Choix de la technologie */}
+                  <div className="space-y-2">
+                    <span className="font-titre text-xs uppercase tracking-wide text-ivoire block">
+                      Sélectionnez la technologie souhaitée :
                     </span>
-                    <button
-                      type="button"
-                      onClick={() => setInterrupteurs((prev) => Math.min(10, prev + 1))}
-                      className="h-12 w-12 border border-noir-700 bg-noir-800 font-titre text-xl text-ivoire hover:border-or transition-colors flex items-center justify-center"
-                    >
-                      +
-                    </button>
-                    <span className="font-texte text-sm text-ivoire-700 ml-2">
-                      interrupteur(s) ({formatFCFA(interrupteurs * prixInterrupteur)})
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                      <button
+                        type="button"
+                        onClick={() => setTechInterrupteur("wifi")}
+                        className={`p-4 text-left border transition-colors ${
+                          techInterrupteur === "wifi"
+                            ? "border-or bg-noir-950 text-ivoire"
+                            : "border-noir-700 bg-noir-800 text-ivoire-700 hover:border-noir-600"
+                        }`}
+                      >
+                        <div className="flex items-center justify-between mb-1">
+                          <span className="font-titre text-sm uppercase tracking-wide text-ivoire">
+                            📶 WiFi
+                          </span>
+                          {techInterrupteur === "wifi" && (
+                            <span className="text-[10px] text-or font-titre uppercase tracking-wide">Sélectionné</span>
+                          )}
+                        </div>
+                        <span className="font-texte text-xs text-ivoire-700 block">
+                          Connexion directe box · Idéal 1 à 3 interrupteurs
+                        </span>
+                      </button>
+
+                      <button
+                        type="button"
+                        onClick={() => setTechInterrupteur("zigbee")}
+                        className={`p-4 text-left border transition-colors ${
+                          techInterrupteur === "zigbee"
+                            ? "border-or bg-noir-950 text-ivoire"
+                            : "border-noir-700 bg-noir-800 text-ivoire-700 hover:border-noir-600"
+                        }`}
+                      >
+                        <div className="flex items-center justify-between mb-1">
+                          <span className="font-titre text-sm uppercase tracking-wide text-ivoire">
+                            🔗 Zigbee
+                          </span>
+                          {techInterrupteur === "zigbee" && (
+                            <span className="text-[10px] text-or font-titre uppercase tracking-wide">Sélectionné</span>
+                          )}
+                        </div>
+                        <span className="font-texte text-xs text-ivoire-700 block">
+                          Passerelle dédiée · Recommandé dès 4 interrupteurs
+                        </span>
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Grille de prix officielle */}
+                  <div className="border border-noir-800 bg-noir-950 p-4">
+                    <span className="font-titre text-xs uppercase tracking-accroche text-or block mb-2">
+                      Grille de prix (gangs WiFi — équivalents Zigbee)
                     </span>
+                    <div className="overflow-x-auto">
+                      <table className="w-full text-left font-texte text-xs">
+                        <thead>
+                          <tr className="border-b border-noir-800 text-ivoire-800 font-titre uppercase text-[10px]">
+                            <th className="py-2 px-2">Interrupteur</th>
+                            <th className={`py-2 px-2 text-right ${techInterrupteur === "wifi" ? "text-or font-medium" : ""}`}>
+                              WiFi {techInterrupteur === "wifi" && "✓"}
+                            </th>
+                            <th className={`py-2 px-2 text-right ${techInterrupteur === "zigbee" ? "text-or font-medium" : ""}`}>
+                              Zigbee {techInterrupteur === "zigbee" && "✓"}
+                            </th>
+                          </tr>
+                        </thead>
+                        <tbody className="divide-y divide-noir-900">
+                          {grilleInterrupteurs.map((item) => (
+                            <tr key={item.gang}>
+                              <td className="py-2 px-2 text-ivoire font-medium">{item.label}</td>
+                              <td className={`py-2 px-2 text-right ${techInterrupteur === "wifi" ? "text-or font-semibold" : "text-ivoire-700"}`}>
+                                {formatFCFA(item.wifi)}
+                              </td>
+                              <td className={`py-2 px-2 text-right ${techInterrupteur === "zigbee" ? "text-or font-semibold" : "text-ivoire-700"}`}>
+                                {formatFCFA(item.zigbee)}
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+
+                  {/* Compteurs de quantité par modèle */}
+                  <div className="space-y-3 pt-2">
+                    <div className="flex items-center justify-between">
+                      <span className="font-titre text-xs uppercase tracking-wide text-ivoire">
+                        Nombre d&apos;interrupteurs à installer :
+                      </span>
+                      <span className="font-titre text-xs text-or">
+                        Total : {totalInterrupteurs} unité(s)
+                      </span>
+                    </div>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                      {grilleInterrupteurs.map((item) => {
+                        const qte = interrupteursParGang[item.gang];
+                        const pu = item[techInterrupteur];
+                        return (
+                          <div
+                            key={item.gang}
+                            className="border border-noir-800 bg-noir-900 p-3 flex items-center justify-between"
+                          >
+                            <div>
+                              <span className="font-titre text-xs uppercase tracking-wide text-ivoire block">
+                                {item.label} ({techInterrupteur.toUpperCase()})
+                              </span>
+                              <span className="font-texte text-[11px] text-ivoire-700">
+                                {formatFCFA(pu)} / unité
+                              </span>
+                            </div>
+                            <div className="flex items-center gap-2">
+                              <button
+                                type="button"
+                                onClick={() =>
+                                  setInterrupteursParGang((prev) => ({
+                                    ...prev,
+                                    [item.gang]: Math.max(0, prev[item.gang] - 1),
+                                  }))
+                                }
+                                className="h-8 w-8 border border-noir-700 bg-noir-800 font-titre text-sm text-ivoire hover:border-or flex items-center justify-center transition-colors"
+                              >
+                                —
+                              </button>
+                              <span className="font-titre text-base text-or w-7 text-center">
+                                {qte}
+                              </span>
+                              <button
+                                type="button"
+                                onClick={() =>
+                                  setInterrupteursParGang((prev) => ({
+                                    ...prev,
+                                    [item.gang]: Math.min(10, prev[item.gang] + 1),
+                                  }))
+                                }
+                                className="h-8 w-8 border border-noir-700 bg-noir-800 font-titre text-sm text-ivoire hover:border-or flex items-center justify-center transition-colors"
+                              >
+                                +
+                              </button>
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+
+                    {totalInterrupteurs >= 4 && techInterrupteur === "wifi" && (
+                      <div className="font-texte text-xs text-or bg-noir-950 border border-or/40 p-3">
+                        💡 <strong>Conseil d&apos;expert :</strong> Vous avez sélectionné {totalInterrupteurs} interrupteurs. Nous vous recommandons d&apos;opter pour la technologie <strong>Zigbee</strong> pour garantir une réactivité instantanée et éviter d&apos;encombrer votre Wi-Fi.
+                      </div>
+                    )}
                   </div>
                 </div>
               )}
@@ -525,21 +693,45 @@ export default function DevisSimulatorPage() {
                     </span>
                     <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                       {[
-                        { id: "echo-dot", label: "Echo Dot (85 000 FCFA)" },
-                        { id: "echo-pop", label: "Echo Pop (Prix à confirmer)" },
-                        { id: "aucun", label: "Aucun assistant vocal" },
+                        {
+                          id: "echo-dot",
+                          label: "Echo Dot (85 000 FCFA)",
+                          desc: "Son supérieur puissant, capteur de température, détecteur de présence & commandes tactiles.",
+                        },
+                        {
+                          id: "echo-pop",
+                          label: "Echo Pop (Prix à confirmer)",
+                          desc: "Format compact hémisphérique. Note : Amazon ne les produit plus (tarif à confirmer).",
+                        },
+                        {
+                          id: "aucun",
+                          label: "Aucun assistant vocal",
+                          desc: "Pilotage tactile mural et via smartphone uniquement.",
+                        },
                       ].map((opt) => (
                         <button
                           key={opt.id}
                           type="button"
                           onClick={() => setAssistantVocal(opt.id as any)}
-                          className={`p-3 text-left border text-xs font-titre uppercase tracking-wide transition-colors ${
+                          className={`p-3 text-left border text-xs transition-colors flex flex-col justify-between ${
                             assistantVocal === opt.id
                               ? "border-or bg-noir-950 text-ivoire"
                               : "border-noir-700 bg-noir-800 text-ivoire-700 hover:border-noir-600"
                           }`}
                         >
-                          {opt.label}
+                          <div>
+                            <span className="font-titre uppercase tracking-wide text-ivoire font-medium block mb-1">
+                              {opt.label}
+                            </span>
+                            <span className="font-texte text-[11px] text-ivoire-700 leading-snug block">
+                              {opt.desc}
+                            </span>
+                          </div>
+                          {assistantVocal === opt.id && (
+                            <span className="font-titre text-[10px] text-or uppercase tracking-wide mt-2 block">
+                              ✓ Choisi
+                            </span>
+                          )}
                         </button>
                       ))}
                     </div>
@@ -606,7 +798,7 @@ export default function DevisSimulatorPage() {
                     Où se situe votre logement ?
                   </h2>
                   <p className="font-texte text-sm text-ivoire-700">
-                    Nous intervenons à Brazzaville et Pointe-Noire avec nos techniciens locaux.
+                    Nous intervenons avec nos techniciens locaux à Brazzaville et Pointe-Noire, ainsi que sur tout le territoire national selon l&apos;envergure de votre projet.
                   </p>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 pt-2">
                     <Select
@@ -616,6 +808,13 @@ export default function DevisSimulatorPage() {
                       options={[
                         { value: "Brazzaville", label: "Brazzaville" },
                         { value: "Pointe-Noire", label: "Pointe-Noire" },
+                        { value: "Dolisie", label: "Dolisie" },
+                        { value: "Nkayi", label: "Nkayi" },
+                        { value: "Oyo", label: "Oyo" },
+                        { value: "Ouesso", label: "Ouesso" },
+                        { value: "Kinkala", label: "Kinkala" },
+                        { value: "Mossendjo", label: "Mossendjo" },
+                        { value: "Autre localité (Congo)", label: "Autre localité (Congo - Projet national)" },
                       ]}
                     />
 

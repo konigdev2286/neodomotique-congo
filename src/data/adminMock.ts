@@ -7,7 +7,7 @@ export interface LeadMock {
   id: string;
   nom: string;
   telephone: string;
-  ville: "Brazzaville" | "Pointe-Noire";
+  ville: string;
   quartier: string;
   typeLogement: string;
   packInteret: string;
